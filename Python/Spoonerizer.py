@@ -32,4 +32,5 @@ for t in tails:
 	initials_index = (initials_index + 1) % len(initials)
 	
 words = ''.join(words)
+words = words[:-1]
 print(words)

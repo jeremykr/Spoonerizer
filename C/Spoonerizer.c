@@ -124,13 +124,6 @@ void spoonerize(List* H, List* T) {
 	printf("\n");
 }
 
-void print_list(List* L) {
-	Node* np = L->head;
-	for (; np; np = np->next) {
-		printf("%s\n", np->data);
-	}
-}
-
 int main() {
 	char* input = (char*)malloc(INPUT_SIZE);
 	List* input_list;

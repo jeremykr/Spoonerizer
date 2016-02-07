@@ -1,14 +1,7 @@
 # Python 3.4.0
 import random
 
-# Read consonants and vowels from reference file.
-
-consonants = vowels = ""
-with open("../reference", 'r') as f:
-	consonants = f.readline().strip()
-	vowels = f.readline().strip()
-	
-# = = = = = = = = = = = = = = = = = = = = = = = =
+vowels = "aeiou"
 
 tokens = input("Input some words: ").lower().split()
 

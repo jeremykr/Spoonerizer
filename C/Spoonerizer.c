@@ -5,9 +5,6 @@
 
 #define INPUT_SIZE 100
 
-const char consonants[] = "bcdfghjklmnpqrstvwxyz";
-const char vowels[] = "aeiou";
-
 typedef struct Node {
 	char* data;
 	struct Node* next;
@@ -54,18 +51,91 @@ char* to_lower(char* s) {
 /* Converts all characters in a string to lowercase. */
 	char* p = s;
 	for (; *p; p++) {
-		if ((*p) > 64 && (*p) < 91) {
-			(*p) += 32;
+		if (*p > 64 && *p < 91) {
+			*p += 32;
 		}
 	}
 	return s;
 }
 
+List* tokenize_input(char* s) {
+	List* L = init_list();
+	const char delim[3] = " \n";
+	char* token;
+	
+	token = strtok(s, delim);
+	
+	while(token) {
+		append(L, token);
+		token = strtok(NULL, delim);
+	}
+	return L;
+}
+
+int is_vowel(char c) {
+/*	Returns 1 if character is vowel, 0 otherwise. */
+	if (c=='a'||c=='e'||c=='i'||c=='o'||c=='u') {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+void split_lists(List* I, List* H, List* T) {
+/* 	Takes a list and splits it into a list containing the consonant heads of words,
+	and another containing the rest of the word. */
+	Node* p;
+	char* head_buffer;
+	int head_index = 0;
+	char* str_p;
+	
+	for (p = I->head; p; p = p->next, head_index = 0) {
+		/* gather heads */
+		head_buffer = (char*)malloc(sizeof(p->data));
+		for (str_p = p->data; str_p && !is_vowel(*str_p); str_p++, head_index++) {
+		 	head_buffer[head_index] = *str_p;
+		}
+		head_buffer[head_index] = '\0';
+		append(H, head_buffer);
+		append(T, str_p);
+	}
+}
+
+void spoonerize(List* H, List* T) {
+	time_t t;
+	int random;
+	Node* tp;
+	Node* hp;
+	int i;
+	
+	H->tail->next = H->head;
+	srand((unsigned) time(&t));
+	random = rand() % (H->size - 1) + 1;
+	
+	for (hp = H->head, i = 0; hp && i < random; hp = hp->next, i++); 
+	
+	for (tp = T->head; tp && hp; tp = tp->next, hp = hp->next) {
+		printf("%s", hp->data);
+		printf("%s", tp->data);
+		if (tp->next) {
+			printf(" ");
+		}
+	}
+	printf("\n");
+}
+
+void print_list(List* L) {
+	Node* np = L->head;
+	for (; np; np = np->next) {
+		printf("%s\n", np->data);
+	}
+}
+
 int main() {
 	char* input = (char*)malloc(INPUT_SIZE);
-	List* input_list = init_list();
-	Node* np;
-	
+	List* input_list;
+	List* head_list = init_list();
+	List* tail_list = init_list();
 	
 	printf("Input some words: ");
 	
@@ -75,7 +145,13 @@ int main() {
 	}
 	
 	input = to_lower(input);
-	printf("%s", input);
-	printf("List size: %d\n", input_list->size);
+	input_list = tokenize_input(input);
 	
+	if (input_list->size < 2) {
+		printf("Input error: not enough words.\n");
+		return 1;
+	}
+	
+	split_lists(input_list, head_list, tail_list);
+	spoonerize(head_list, tail_list);	
 }

@@ -16,7 +16,7 @@ class Spoonerizer {
 		}
 	}
 	
-	private void TokenizeInput(String S) throws IOException {
+	private void TokenizeInput(String S) {
 		inputList = new ArrayList();
 		StringTokenizer st = new StringTokenizer(S);
 		
@@ -24,11 +24,6 @@ class Spoonerizer {
 			inputList.add(st.nextToken());
 		}
 		inputList.trimToSize();
-		
-		if (inputList.size() < 2) {
-			IOException e = new IOException();
-			throw e;
-		}
 	}
 	
 	private void SplitInput() {
@@ -73,10 +68,10 @@ class Spoonerizer {
 	}
 	
 	public String spoon(String s) {
-		try {
-			TokenizeInput(s.toLowerCase());
-		} catch (IOException ioe) {
-			System.out.print("Spoonerizer input error: not enough words.");
+		TokenizeInput(s.toLowerCase());
+		if (inputList.size() == 1) {
+			return inputList.get(0);
+		} else if (inputList.size() == 0) {
 			return "";
 		}
 		SplitInput();

@@ -18,8 +18,76 @@
 		<p id="output"></p>
 		
 		<script>
+			function isVowel(c) {
+				if (c=='a'||c=='e'||c=='i'||c=='o'||c=='u') {
+					return true;
+				}
+				return false;
+			}
+			
+			function spoon(h, t) {
+				// Recombines heads and tails in a random order.
+				var headIndex = ~~(Math.random() * (h.length - 1)) + 1;
+				var output = "";
+				for (i = 0; i < t.length; i++, headIndex = (headIndex + 1) % h.length) {
+					output += h[headIndex] + t[i] + " ";
+				}
+				return output.slice(0, output.length-1);
+			}
+			
+			function getHeadsAndTails(x) {
+				// Splits a string into heads and tails, where a head is all
+				// characters up to the first vowel, and the tail is all characters
+				// from the first vowel onward.
+				var heads = [];
+				var tails = [];
+				var vowelIndex = 0;
+				var vowelFound = false;
+				
+				for (i = 0; i < x.length; i++) {
+					vowelIndex = 0;
+					vowelFound = false;
+					// Find the index of the vowel within each word.
+					for (j = 0; j < x[i].length; j++) {
+						if (isVowel(x[i].charAt(j))) {
+							vowelFound = true;
+							vowelIndex = j;
+							heads[i] = x[i].slice(0,j);
+							tails[i] = x[i].slice(j);
+							break;
+						}
+					}
+					
+					// If no vowel is found, add the whole word to the head list,
+					// and an empty string to the tail list.
+					if (!vowelFound) {
+						heads[i] = x[i];
+						tails[i] = "";
+					// If the vowel is the first character in the string,
+					// add an empty string to the head list, and the rest in the tail list.
+					} else if (vowelIndex == 0) {
+						heads[i] = "";
+						tails[i] = x[i];
+					}
+					
+				}
+				
+				return [heads, tails];
+			}
+			
 			function Spoonerize() {
-				document.getElementById("output").innerHTML = "Wow!";
+				var input = document.getElementById("input").value;
+				var output = "";
+				input = input.toLowerCase().split(" ");
+				
+				if (input.length == 1) {
+					output = input[0];
+				} else if (input.length > 1) {
+					output = getHeadsAndTails(input);
+					output = spoon(output[0], output[1]);
+				}
+				
+				document.getElementById("output").innerHTML = output;
 			}
 		</script>
 		

@@ -1,0 +1,17 @@
+body {
+	background-color: #00202e;
+	margin-top: 200px;
+	margin-left: 200px;
+}
+
+h1 {
+	font-family: "Liberation Sans";
+	font-size: 40px;
+	color: orange;
+}
+
+p {
+	font-family: "Liberation Sans";
+	font-size: 20px;
+	color: white;
+}
